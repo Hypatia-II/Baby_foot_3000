@@ -1,0 +1,274 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>baby_foot_3000 module &#8212; documentation Baby-Foot 3000 1.0.0</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" />
+    <link rel="next" title="ball module" href="ball.html" />
+    <link rel="prev" title="scripts" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ball.html" title="ball module"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="scripts"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-baby_foot_3000">
+<span id="baby-foot-3000-module"></span><h1>baby_foot_3000 module<a class="headerlink" href="#module-baby_foot_3000" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Fichier à executer pour lancer le jeu regroupant l’ensemble des classes gérant l’IHM.</p>
+<p>Auteurs : Inès BENITO (FirstWindow, WindowSettingsUI, WindowCreditsUI, WindowHelpUI) &amp; Sacha HIRSCH (WindowGameUI)</p>
+<dl class="class">
+<dt id="baby_foot_3000.FirstWindow">
+<em class="property">class </em><code class="descclassname">baby_foot_3000.</code><code class="descname">FirstWindow</code><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
+<p>Classe qui permet d’afficher et d’avoir toutes les fonctionnalités de la page d’accueil du jeu</p>
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.credits">
+<code class="descname">credits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.credits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.credits" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode affichant la page des crédits</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.difficulty">
+<code class="descname">difficulty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.difficulty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.difficulty" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode permettant de modifier la difficulté du jeu</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.end_game">
+<code class="descname">end_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.end_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.end_game" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode fermant la page de jeu et éteignant les bruits de fond de stade de foot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.helpbut">
+<code class="descname">helpbut</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.helpbut"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.helpbut" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode affichant la page d’aide</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.music_state_changed">
+<code class="descname">music_state_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.music_state_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.music_state_changed" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode permettant d’allumer ou d’éteindre la musique lorsque la case est cochée ou décochée dans la page
+des paramètres</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.new_game">
+<code class="descname">new_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.new_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.new_game" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode qui ouvre la page du jeu et met en route le bruit de fond de stade de foot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.new_game_from_settings">
+<code class="descname">new_game_from_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.new_game_from_settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.new_game_from_settings" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode qui ouvre la page de jeu lorsque l’on clique sur «&nbsp;New Game&nbsp;» à partir de la page de paramètres.
+Elle ferme la page de paramètres et met en route le son de stade de foot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.settings">
+<code class="descname">settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.settings" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode qui ouvre la la page des paramètres et permet de modifier la difficulté du jeu ainsi que de couper
+ou d’allumer la musique et les effets sonores</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.FirstWindow.sound_state_changed">
+<code class="descname">sound_state_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#FirstWindow.sound_state_changed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.FirstWindow.sound_state_changed" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode permettant d’allumer ou d’éteindre les effets sonores lorsque la case est cochée ou décochée dans la
+page des paramètres</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="baby_foot_3000.WindowCreditsUI">
+<em class="property">class </em><code class="descclassname">baby_foot_3000.</code><code class="descname">WindowCreditsUI</code><span class="sig-paren">(</span><em>welcomeWindow</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowCreditsUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowCreditsUI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
+<p>Classe qui permet d’afficher et d’avoir accès à toutes les fonctionnalités de la page des crédits. Elle prend
+en paramètre la page d’accueil</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="baby_foot_3000.WindowGameUI">
+<em class="property">class </em><code class="descclassname">baby_foot_3000.</code><code class="descname">WindowGameUI</code><span class="sig-paren">(</span><em>welcomeWindow</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
+<p>Fenêtre affichant le jeu en lui-même</p>
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.closeEvent">
+<code class="descname">closeEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.closeEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.closeEvent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Surcharge de la fonction closeEvent de QWidget. Arrête l’ambiance sonore à la fermeture de l’instance de la
+WindowsGameUI</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.countdown">
+<code class="descname">countdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.countdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.countdown" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode affichant un compte à rebours et relançant la balle (ou une nouvelle partie) une fois terminée.
+Elle a un comportement récursif, s’appelant elle-même après une seconde, la condition d’arrêt étant le compteur
+atteignant 0. L’IHM continue de s’exécuter pendant la seconde d’attente, mais la variable d’état booléenne
+countdown_ongoing indique à la fonction one_step de ne pas mettre à jour les positions des joueurs et de la
+balle pendant ce temps</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.end_game">
+<code class="descname">end_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.end_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.end_game" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Fonction arrêtant une partie</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.keyPressEvent">
+<code class="descname">keyPressEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.keyPressEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.keyPressEvent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Surcharge de la fonction keyPressEvent de QWidget. Elle est automatiquement appelée lorsque l’utilisateur
+appuie sur une touche de clavier. Selon la touche pressée, certaines variables d’état de l’objet ball sont
+modifiées. Ces variables seront lues par les fonctions de l’objet ball, qui modifieront leur comportement en
+conséquence</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.keyReleaseEvent">
+<code class="descname">keyReleaseEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.keyReleaseEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.keyReleaseEvent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Surcharge de la fonction keyReleaseEvent de QWidget. Elle est automatiquement appelée lorsque l’utilisateur
+relâche une touche de clavier. Selon la touche pressée, certaines variables d’état de l’objet ball sont
+modifiées. Ces variables seront lues par les fonctions de l’objet ball, qui modifieront leur comportement en
+conséquence</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.one_step">
+<code class="descname">one_step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.one_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.one_step" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Méthode ayant pour principale utilité d’appeler la fonction next_step de l’objet ball. A aussi pour rôle
+d’activer certaines fonctions lors d’un but (audio, statistiques, et compte à rebours)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.paintEvent">
+<code class="descname">paintEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.paintEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.paintEvent" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Surcharge de la fonction paintEvent de QWidget. Appelée par QWidget.repaint() ou Qwidget.update(), elle
+appelle la fonction draw de l’objet ball, qui va dessiner l’ensemble des images : joueurs, barres, terrain et
+balle à l’aide de l’objet QPainter initialisé au début de paintEvent.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.setChildrenFocusPolicy">
+<code class="descname">setChildrenFocusPolicy</code><span class="sig-paren">(</span><em>policy</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.setChildrenFocusPolicy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.setChildrenFocusPolicy" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Activation des flèches du clavier. Code trouvé sur internet</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="baby_foot_3000.WindowGameUI.start_game">
+<code class="descname">start_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowGameUI.start_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowGameUI.start_game" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Fonction lançant une partie</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="baby_foot_3000.WindowHelpUI">
+<em class="property">class </em><code class="descclassname">baby_foot_3000.</code><code class="descname">WindowHelpUI</code><span class="sig-paren">(</span><em>welcomeWindow</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowHelpUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowHelpUI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
+<p>Classe qui permet d’afficher et d’avoir accès à toutes les fonctionnalités de la page des crédits. Elle prend
+en paramètre la page d’accueil</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="baby_foot_3000.WindowSettingsUI">
+<em class="property">class </em><code class="descclassname">baby_foot_3000.</code><code class="descname">WindowSettingsUI</code><span class="sig-paren">(</span><em>welcomeWindow</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/baby_foot_3000.html#WindowSettingsUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#baby_foot_3000.WindowSettingsUI" title="Lien permanent vers cette définition">¶</a></dt>
+<dd><p>Bases : <code class="xref py py-class docutils literal"><span class="pre">PyQt5.QtWidgets.QMainWindow</span></code></p>
+<p>Classe qui permet d’afficher et d’avoir accès à toutes les fonctionnalités de la page des paramètres. Elle prend
+en paramètre la page d’accueil</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="index.html"
+                        title="Chapitre précédent">scripts</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="ball.html"
+                        title="Chapitre suivant">ball module</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ball.html" title="ball module"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="scripts"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Inès BENITO &amp; Sacha HIRSCH.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

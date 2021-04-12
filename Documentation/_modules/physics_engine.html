@@ -1,0 +1,350 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>physics_engine &#8212; documentation Baby-Foot 3000 1.0.0</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Code du module</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Code source de physics_engine</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Ensemble de fonctions utiles au calcul du mouvement de la balle et des collisions</span>
+
+<span class="sd">Auteur : Sacha HIRSCH&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Sacha HIRSCH&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">choice</span>
+
+
+<div class="viewcode-block" id="norme"><a class="viewcode-back" href="../physics_engine.html#physics_engine.norme">[docs]</a><span class="k">def</span> <span class="nf">norme</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;norme d&#39;un vecteur.</span>
+
+<span class="sd">    vecteur unitaire</span>
+<span class="sd">    :param u: Vecteur quelconque</span>
+<span class="sd">    :type u: array numpy</span>
+<span class="sd">    :return: La norme de ce vecteur</span>
+<span class="sd">    :rtype: float&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="det"><a class="viewcode-back" href="../physics_engine.html#physics_engine.det">[docs]</a><span class="k">def</span> <span class="nf">det</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;déterminant</span>
+<span class="sd">    param u: Vecteur</span>
+<span class="sd">    :type u: array numpy</span>
+<span class="sd">    :param v: Vecteur</span>
+<span class="sd">    :type v: array numpy</span>
+<span class="sd">    :return: le déterminant deux vecteurs</span>
+<span class="sd">    :rtype: float&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="produit"><a class="viewcode-back" href="../physics_engine.html#physics_engine.produit">[docs]</a><span class="k">def</span> <span class="nf">produit</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;produit scalaire.</span>
+
+<span class="sd">    :param u: Vecteur</span>
+<span class="sd">    :type u: array numpy</span>
+<span class="sd">    :param v: Vecteur</span>
+<span class="sd">    :type v: array numpy</span>
+<span class="sd">    :return: le produit scalaire des deux vecteurs</span>
+<span class="sd">    :rtype: float&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="unitaire"><a class="viewcode-back" href="../physics_engine.html#physics_engine.unitaire">[docs]</a><span class="k">def</span> <span class="nf">unitaire</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;vecteur unitaire.</span>
+
+<span class="sd">    :param u: Vecteur quelconque</span>
+<span class="sd">    :type u: array numpy</span>
+<span class="sd">    :return: Le vecteur unitaire correspondant</span>
+<span class="sd">    :rtype: array numpy&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">norme</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">norme</span><span class="p">(</span><span class="n">u</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Sym"><a class="viewcode-back" href="../physics_engine.html#physics_engine.Sym">[docs]</a><span class="k">def</span> <span class="nf">Sym</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calcul du symétrique du point P par rapport à la droite (AB), perpendiculaire à la surface atteinte en I.</span>
+
+<span class="sd">    :param A: Premier point de l&#39;axe de symétrie</span>
+<span class="sd">    :type: array numpy</span>
+<span class="sd">    :param B: Second point de l&#39;axe de symétrie</span>
+<span class="sd">    :type B: array numpy</span>
+<span class="sd">    :return: Le symétrique</span>
+<span class="sd">    :rtype: array numpy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="p">(</span><span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">P</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">unitaire</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">unitaire</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+    <span class="n">cost</span> <span class="o">=</span> <span class="n">produit</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">sint</span> <span class="o">=</span> <span class="n">det</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">cos2t</span> <span class="o">=</span> <span class="n">cost</span> <span class="o">*</span> <span class="n">cost</span> <span class="o">-</span> <span class="n">sint</span> <span class="o">*</span> <span class="n">sint</span>  <span class="c1"># trigo</span>
+    <span class="n">sin2t</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">sint</span> <span class="o">*</span> <span class="n">cost</span>  <span class="c1"># trigo</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">cos2t</span> <span class="o">*</span> <span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sin2t</span> <span class="o">*</span> <span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sin2t</span> <span class="o">*</span> <span class="n">U</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cos2t</span> <span class="o">*</span> <span class="n">U</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span></div>
+
+
+<div class="viewcode-block" id="distance"><a class="viewcode-back" href="../physics_engine.html#physics_engine.distance">[docs]</a><span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calcul de la distance entre deux points.</span>
+
+<span class="sd">    :param A: Premier point</span>
+<span class="sd">    :type: array numpy</span>
+<span class="sd">    :param B: Second point</span>
+<span class="sd">    :type B: array numpy</span>
+<span class="sd">    :return: La distance entre les deux points</span>
+<span class="sd">    :rtype: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">B</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">B</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="geom_compute"><a class="viewcode-back" href="../physics_engine.html#physics_engine.geom_compute">[docs]</a><span class="k">def</span> <span class="nf">geom_compute</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">simulated</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fonction réalisant différents calculs géométriques. Les valeurs retournées seront utilisées par la fonction</span>
+<span class="sd">    collision.</span>
+
+<span class="sd">    :param surf: surface à tester</span>
+<span class="sd">    :type surf: array numpy</span>
+<span class="sd">    :param coords: coordonnées et vitesses actuelles de la balle</span>
+<span class="sd">    :type coords: array numpy</span>
+<span class="sd">    :param simulated: coordonnées et vitesses prédites de la balle</span>
+<span class="sd">    :type simulated: array numpy</span>
+<span class="sd">    :return: Valeurs calculées (cf. la fonction collision)</span>
+<span class="sd">    :rtype: tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">surf</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]:</span>
+        <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">12</span>
+    <span class="k">if</span> <span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">simulated</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">simulated</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">12</span>
+    <span class="n">a1</span> <span class="o">=</span> <span class="p">(</span><span class="n">surf</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">surf</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># calcul du coef directeur de la surface</span>
+    <span class="n">a2</span> <span class="o">=</span> <span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">simulated</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">simulated</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># calcul du coef directeur de la trajectoire</span>
+    <span class="n">b1</span> <span class="o">=</span> <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a1</span> <span class="o">*</span> <span class="n">surf</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># ordonnée à l&#39;orgine de la surface</span>
+    <span class="n">b2</span> <span class="o">=</span> <span class="n">simulated</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a2</span> <span class="o">*</span> <span class="n">simulated</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># ordonnée à l&#39;origine de la trajectoire</span>
+
+    <span class="k">if</span> <span class="n">a2</span> <span class="o">==</span> <span class="n">a1</span><span class="p">:</span>
+        <span class="n">a1</span> <span class="o">+=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">12</span>
+    <span class="n">xi</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">b2</span> <span class="o">-</span> <span class="n">b1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">a2</span> <span class="o">-</span> <span class="n">a1</span><span class="p">)</span>  <span class="c1"># calcul du point d&#39;intersection des deux droites (on cherche (xi, yi) tq a1*xi + b1 = a2*xi + b2 et yi = a1*xi+b1)</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="n">a1</span> <span class="o">*</span> <span class="n">xi</span> <span class="o">+</span> <span class="n">b1</span>
+
+    <span class="n">d1</span> <span class="o">=</span> <span class="n">distance</span><span class="p">(</span><span class="n">simulated</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>  <span class="c1"># d1 : distance entre deux points consecutifs</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">distance</span><span class="p">((</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">),</span> <span class="n">coords</span><span class="p">)</span>  <span class="c1"># d2 : distance entre le point k-1 et le point d&#39;intersection</span>
+
+    <span class="k">return</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span></div>
+
+
+<div class="viewcode-block" id="euler"><a class="viewcode-back" href="../physics_engine.html#physics_engine.euler">[docs]</a><span class="k">def</span> <span class="nf">euler</span><span class="p">(</span><span class="n">ball</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;Fonction calculant les nouvelles positions et vitesses cartésiennes de la balle en ignorant toute</span>
+<span class="sd">    potentielle collision.</span>
+
+<span class="sd">    :param ball: la balle</span>
+<span class="sd">    :type ball: Ball</span>
+<span class="sd">    :return: Les valeurs calculées</span>
+<span class="sd">    :rtype: tuple&quot;&quot;&quot;</span>
+    <span class="n">newvx</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ball</span><span class="o">.</span><span class="n">drag</span>
+    <span class="n">newvy</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">ball</span><span class="o">.</span><span class="n">drag</span>  <span class="c1"># La nouvelle vitesse est légèrement inférieure à la vitesse précédente</span>
+    <span class="c1"># pour prendre en compte les frottements</span>
+    <span class="n">newxp</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">newvx</span> <span class="o">*</span> <span class="n">ball</span><span class="o">.</span><span class="n">time_step</span>
+    <span class="n">newyp</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">newvy</span> <span class="o">*</span> <span class="n">ball</span><span class="o">.</span><span class="n">time_step</span>  <span class="c1"># La nouvelle position est calculée grâce à une méthode d&#39;Euler</span>
+    <span class="c1"># (correspondant exactement à la réalité physique dans notre cas)</span>
+
+    <span class="k">return</span> <span class="n">newxp</span><span class="p">,</span> <span class="n">newyp</span><span class="p">,</span> <span class="n">newvx</span><span class="p">,</span> <span class="n">newvy</span></div>
+
+
+<div class="viewcode-block" id="collision"><a class="viewcode-back" href="../physics_engine.html#physics_engine.collision">[docs]</a><span class="k">def</span> <span class="nf">collision</span><span class="p">(</span><span class="n">ball</span><span class="p">,</span> <span class="n">current_pos</span><span class="p">,</span> <span class="n">simulated</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">just_detected</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fonction récursive renvoyant les nouvelles positions et vitesses cartésiennes de la balle en prenant en</span>
+<span class="sd">    compte les collisions. La récursion se fait sur les surfaces collisionnées à la suite dans un seul pas de temps.</span>
+<span class="sd">    La condition d&#39;arrêt est l&#39;absence de surfaces sur la trajectoire de la balle.</span>
+
+<span class="sd">    :param ball: la balle</span>
+<span class="sd">    :type ball: Ball</span>
+<span class="sd">    :param current_pos: est la position actuelle de la balle (inialisées avec les valeurs du pas en cours)</span>
+<span class="sd">    :type current_pos: array numpy</span>
+<span class="sd">    :param simulated: est la position et vitesse de la balle prédite (initialisées avec la fonction Euler)</span>
+<span class="sd">    :type simulated: array numpy</span>
+<span class="sd">    :param time_step: est le temps restant avant la fin du pas de temps (initialisé à la durée nominale d&#39;un pas de temps)</span>
+<span class="sd">    :type time_step: float</span>
+<span class="sd">    :param just_detected: est la surface venant d&#39;être collisionnée (initalisée à une surface &quot;nulle&quot;)</span>
+<span class="sd">    :type just_detected: array numpy</span>
+<span class="sd">    :return: Nouvelle position et vitesse de la balle (à la fin de la récursion)</span>
+<span class="sd">    :rtype: simulated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">surfaces_intersected</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># On initialise la liste des surfaces avec lesquelles il y a collision</span>
+
+    <span class="k">for</span> <span class="n">surface</span> <span class="ow">in</span> <span class="n">ball</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">surfaces</span><span class="p">(</span><span class="n">ball</span><span class="p">):</span>  <span class="c1"># A chaque profondeur de récursion, on parcourt la liste des</span>
+        <span class="c1"># surfaces renvoyées par terrain.surfaces</span>
+
+        <span class="n">values</span> <span class="o">=</span> <span class="n">geom_compute</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">current_pos</span><span class="p">,</span> <span class="n">simulated</span><span class="p">)</span>  <span class="c1"># Calcul de différentes valeurs géométriques utiles</span>
+        <span class="c1"># pour la détection de collision et le calcul du rebond. Les valeurs sont les suivantes :</span>
+        <span class="c1"># values[0] : a1 coef directeur de la surface</span>
+        <span class="c1"># values[1] : a2 coef directeur de la trajectoire</span>
+        <span class="c1"># values[2] : b1 ordonnée à l&#39;orgine de la surface</span>
+        <span class="c1"># values[3] : b2 ordonnée à l&#39;origine de la trajectoire</span>
+        <span class="c1"># values[4] : xi abscisse de l&#39;intersection des droites portées par la trajectoire et la surface</span>
+        <span class="c1"># values[5] : yi ordonnée de l&#39;intersection des droites portées par la trajectoire et la surface</span>
+        <span class="c1"># values[6] : d1 distance entre deux positions consecutives de la balle</span>
+        <span class="c1"># values[7] : d2 distance entre l&#39;ancienne position de la balle et l&#39;intersection des droites trajectoire et</span>
+        <span class="c1"># surface</span>
+
+        <span class="c1"># On teste ensuite s&#39;il y a effectivement collision</span>
+
+        <span class="c1"># On veut tout d&#39;abord d2&lt;d1</span>
+        <span class="k">if</span> <span class="n">values</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">values</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="c1"># On teste ensuite si le point d&#39;intersection se situe sur la surface</span>
+                <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">surface</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">surface</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">surface</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">surface</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+                <span class="c1"># On teste ensuite si le point de collision ne trouve pas dans le sens inverse du celui de la</span>
+                <span class="c1"># trajectoire de la balle</span>
+                <span class="p">(</span><span class="n">simulated</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">current_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="ow">or</span> <span class="n">simulated</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">current_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">simulated</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">current_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="ow">or</span> <span class="n">simulated</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">current_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+                <span class="c1"># Et enfin on ne veut pas détecter une collision avec la surface colisionnée à la profondeur de</span>
+                <span class="c1"># récursion précédente. En effet, à ce stade la balle est situeé sur cette surface, il y donc risque</span>
+                <span class="c1"># de la détecter à nouveau</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">just_detected</span><span class="p">)):</span>
+
+            <span class="c1"># On calcule le symétrique de la position de la balle simulée par Euler par rapport à la surface</span>
+            <span class="c1"># collisionée</span>
+            <span class="n">coordsym</span> <span class="o">=</span> <span class="n">Sym</span><span class="p">([</span><span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">surface</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">surface</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">surface</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">simulated</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                                                            <span class="n">simulated</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+            <span class="c1"># On calcule le temps restant à la balle pour se déplacer dans le pas de temps actuel</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">time_step</span> <span class="o">*</span> <span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span> <span class="o">/</span> <span class="n">values</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+
+            <span class="n">surface_boost</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">div</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">surface</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># Si la surface est une surface latérale de joueur, le rebond est quasi-parfait</span>
+                <span class="n">surface_boost</span> <span class="o">=</span> <span class="mf">0.9</span>
+
+            <span class="k">if</span> <span class="n">surface</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># Si la surface est un bord de terrain, il y a dissipation d&#39;énergie, la vitesse</span>
+                <span class="c1"># en sortie est divisée par 2</span>
+                <span class="n">surface_boost</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+            <span class="k">if</span> <span class="n">surface</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># Si la surface est une surface costale du joueur, il y a dissipation d&#39;énergie,</span>
+                <span class="c1"># la vitesse en sortie est divisée par 4 et une vitesse latérale aléatoire est donnée pour évacuer</span>
+                <span class="c1"># la balle</span>
+                <span class="n">div</span> <span class="o">=</span> <span class="n">choice</span><span class="p">((</span><span class="o">-</span><span class="n">ball</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mi">500</span><span class="p">,</span>
+                              <span class="n">ball</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mi">500</span><span class="p">))</span> <span class="o">/</span> <span class="n">dt</span> <span class="o">*</span> <span class="n">ball</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># On ajoute une légère vitesse</span>
+                <span class="c1"># horizontale pour éviter que la balle rebondisse indéfniment entre</span>
+                <span class="c1"># deux joueurs côte à côte</span>
+                <span class="n">surface_boost</span> <span class="o">=</span> <span class="mf">0.25</span>
+
+            <span class="c1"># Calcul final des nouvelles vitesses. bounce_bonus sert à moduler globalement la puissance du rebond</span>
+            <span class="n">newvx</span> <span class="o">=</span> <span class="p">(</span><span class="n">ball</span><span class="o">.</span><span class="n">bounce_bonus</span> <span class="o">*</span> <span class="n">surface_boost</span> <span class="o">*</span> <span class="p">(</span><span class="n">coordsym</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span> <span class="o">/</span> <span class="n">dt</span> <span class="o">+</span> <span class="n">div</span>
+            <span class="n">newvy</span> <span class="o">=</span> <span class="p">(</span><span class="n">ball</span><span class="o">.</span><span class="n">bounce_bonus</span> <span class="o">*</span> <span class="n">surface_boost</span> <span class="o">*</span> <span class="p">(</span><span class="n">coordsym</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]))</span> <span class="o">/</span> <span class="n">dt</span>
+
+            <span class="c1"># On ajoute la surface collisionnée à la liste des surface avec lesquelles il y a collision, ainsi</span>
+            <span class="c1"># ainsi que les paramètres calculés s&#39;y attachant</span>
+            <span class="n">surfaces_intersected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span> <span class="p">(</span><span class="n">coordsym</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coordsym</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">newvx</span><span class="p">,</span> <span class="n">newvy</span><span class="p">),</span> <span class="n">dt</span><span class="p">,</span> <span class="n">surface</span><span class="p">))</span>
+
+    <span class="c1"># On vérifie ensuite si un but a été marqué, par une détection de collision similaire à celle effectuée plus</span>
+    <span class="c1"># tôt, cette fois ci avec les surfaces correspondant aux buts. S&#39;il y a collision avec l&#39;une des deux cages, on</span>
+    <span class="c1"># met immédiatement fin à la récursion et on renvoie une valeur spéciale &quot;goal_blue&quot; ou &quot;goal_red&quot;</span>
+
+    <span class="k">for</span> <span class="n">goal</span> <span class="ow">in</span> <span class="n">ball</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">goals</span><span class="p">():</span>
+        <span class="n">values_goal</span> <span class="o">=</span> <span class="n">geom_compute</span><span class="p">(</span><span class="n">goal</span><span class="p">,</span> <span class="n">ball</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">simulated</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">values_goal</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">values_goal</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values_goal</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values_goal</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">values_goal</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">values_goal</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">goal</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">goal</span><span class="p">,</span> <span class="n">ball</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">goal_blue</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s1">&#39;goal_blue&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s1">&#39;goal_red&#39;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">surfaces_intersected</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Si la liste des surfaces collisionnées n&#39;est pas vide,</span>
+        <span class="c1"># on sélectionne la surface la plus proche de la position actuelle de la balle de toutes les surfaces</span>
+        <span class="c1"># collisionnées. Pour cela, on les trie suivant la distance d2</span>
+
+        <span class="n">surfaces_intersected</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="c1"># On descend ensuite d&#39;un cran dans la récursion, avec comme nouveaux paramètres d&#39;entrée :</span>
+        <span class="c1"># - Le point d&#39;intersection comme position actuelle de la balle</span>
+        <span class="c1"># - La position après rebond comme position simulée</span>
+        <span class="c1"># - le temps dt restant</span>
+        <span class="c1"># - la surface venant d&#39;être collisionée</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">collision</span><span class="p">(</span><span class="n">ball</span><span class="p">,</span> <span class="n">surfaces_intersected</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">surfaces_intersected</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">surfaces_intersected</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">],</span>
+                         <span class="n">surfaces_intersected</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">4</span><span class="p">])</span>
+
+    <span class="c1"># Si la liste des surfaces collisionnées est vide, on renvoie les positions et vitesses prédites sans collision</span>
+
+    <span class="k">return</span> <span class="n">simulated</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Code du module</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Inès BENITO &amp; Sacha HIRSCH.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

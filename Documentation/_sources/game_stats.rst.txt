@@ -1,0 +1,7 @@
+game\_stats module
+==================
+
+.. automodule:: game_stats
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,345 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ball &#8212; documentation Baby-Foot 3000 1.0.0</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Code du module</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Code source de ball</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Auteur : Sacha HIRSCH&quot;&quot;&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Sacha HIRSCH&quot;</span>
+
+<span class="kn">from</span> <span class="nn">physics_engine</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">choice</span><span class="p">,</span> <span class="n">gauss</span>
+<span class="kn">from</span> <span class="nn">terrain</span> <span class="k">import</span> <span class="n">Terrain</span>
+<span class="kn">from</span> <span class="nn">game_stats</span> <span class="k">import</span> <span class="n">Stat</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="Ball"><a class="viewcode-back" href="../ball.html#ball.Ball">[docs]</a><span class="k">class</span> <span class="nc">Ball</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Classe instanciant une balle, et contenant les fonctions de gestion de la partie&quot;&quot;&quot;</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QImage</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
+                                      <span class="s1">&#39;Assets/Images/ballV2.png&#39;</span><span class="p">))</span>  <span class="c1"># Définition de l&#39;image associée à la balle</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">terrain</span><span class="o">=</span><span class="n">Terrain</span><span class="p">()):</span>  <span class="c1"># On crée un terrain à la création de la balle si aucun terrain n&#39;est</span>
+        <span class="c1"># spécifié.</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;parameters.cfg&quot;</span><span class="p">),</span>
+                 <span class="s1">&#39;r&#39;</span><span class="p">)</span>  <span class="c1"># On ouvre le fichier parameters contenant les paramètres de jeu (modifié en</span>
+        <span class="c1"># amont pour moduler la difficulté)</span>
+
+        <span class="n">param</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>  <span class="c1"># On récupère les paramètres définis dans le fichier parameters</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drag</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounce_bonus</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_kick_speed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># m/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">catch_radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># sans unité</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_speed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># m/s</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span> <span class="o">=</span> <span class="n">terrain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span> <span class="o">=</span> <span class="n">Stat</span><span class="p">()</span>  <span class="c1"># On crée une instance de la classe Stat, qui sera liée à la balle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># Rayon de la balle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>  <span class="c1"># m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># m/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collision_detected</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">col_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">team_blue_state</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">team_red_state</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_caught</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">just_caught</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">forward_kick</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">released</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">qpoint</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QPoint</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Ball.next_step"><a class="viewcode-back" href="../ball.html#ball.Ball.next_step">[docs]</a>    <span class="k">def</span> <span class="nf">next_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Méthode faisant avancer les joueurs et la balle d&#39;un pas. Tout d&#39;abord, on fait avancer les joueurs en</span>
+<span class="sd">        détectant au passage une éventuelle collision. Si il y a collision à ce stade, on passe au pas suivant.</span>
+<span class="sd">        Sinon, pour faire avancer la balle, on distingue deux cas selon si un joueur est en possession de la balle ou</span>
+<span class="sd">        non.</span>
+
+<span class="sd">        - Dans le cas où aucun joueur n&#39;a la balle, on calcule sa position suivante avec la méthode d&#39;Euler.On fait ensuite appel à la fonction collision qui va détecter une éventuelle collision, puis déterminer lesvraies nouvelles coordonées et vitesses de la balle. Dans le cas où il n&#39;y a pas de collision, celles-ci seron égales celles calculées par la méthode d&#39;Euler.</span>
+
+<span class="sd">        - Si un joueur est en possession de la balle, celle-ci le suit dans son mouvement. Si le joueur vient juste d&#39;attrapper la balle, celle-ci est replacée devant lui. Si l&#39;utilisateur relâche simplement la balle, on lui donne une faible impulsion. Si l&#39;utilisateur frappe la balle, on lui donn une forte impulsion.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">left_just_scored</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">right_just_scored</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">kicked</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># On bouge les joueurs et on teste dans le même temps si une frappe est réalisée</span>
+
+        <span class="k">for</span> <span class="n">bar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">bars</span><span class="p">:</span>  <span class="c1"># On parcourt toutes les barres du terrain</span>
+
+            <span class="k">if</span> <span class="n">bar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">team_red_bars</span><span class="p">:</span>  <span class="c1"># Si la barre appartient à l&#39;équipe rouge, on la bouge selon la</span>
+                <span class="c1"># commande clavier du joueur rouge</span>
+                <span class="n">kick</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">newcoords</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">bar_move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">team_red_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># De même pour l&#39;équipe bleue</span>
+                <span class="n">kick</span><span class="p">,</span> <span class="n">speed</span><span class="p">,</span> <span class="n">newcoords</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">bar_move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">team_blue_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">kick</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Si un joueur a percuté la balle durant son mouvement</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">newcoords</span>  <span class="c1"># Les nouvelles coordonnées de la balles sont celles calculées lors de cette</span>
+                <span class="c1"># collision</span>
+
+                <span class="c1"># On doit à présent donner une nouvelle vitesse à la balle. Ici, on va abandonner les lois de Descartes</span>
+                <span class="c1"># pour donner une sensation plus proche du baby-foot en offrant à l&#39;utilisateur plus de contrôle sur la</span>
+                <span class="c1"># balle. Ainsi, la nouvelle vitesse est configurée de telle facçon que le joueur donne de légères</span>
+                <span class="c1"># poussées à la balle au fur et à mesure qu&#39;il avance.</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">speed</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># Si la balle et le joueur allaient dans le même sens , on soustrait la vitesse du joueur à celle de</span>
+                    <span class="c1"># la balle</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span><span class="n">speed</span>
+
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Sinon, on inverse la vitesse du joueur</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">speed</span>
+
+                <span class="c1"># On ajoute efin une légère vitesse horizontale pour éviter que la balle rebondisse indéfniment entre</span>
+                <span class="c1"># deux joueurs côte à côte</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">choice</span><span class="p">((</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">player_width</span> <span class="o">/</span> <span class="mi">150</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_width</span> <span class="o">/</span> <span class="mi">150</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span> <span class="o">*</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="n">kicked</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_caught</span><span class="p">:</span>  <span class="c1"># Si la balle n&#39;est pas attrapée par un joueur</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">kicked</span><span class="p">:</span>  <span class="c1"># On applique la detection de collision si la balle n&#39;a pas été touchée par un joueur</span>
+
+                <span class="n">newvalues</span> <span class="o">=</span> <span class="n">euler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># On calcule d&#39;abord naïvement (sans se préoccuper d&#39;une éventuelle collision)</span>
+                <span class="c1"># les nouvelles position et vitesse de la balle à l&#39;aide de la fonction euler. Ces valeurs seront utiles</span>
+                <span class="c1"># pour la détection de collision</span>
+
+                <span class="n">newvalues</span> <span class="o">=</span> <span class="n">collision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="n">newvalues</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>  <span class="c1"># On appelle</span>
+                <span class="c1"># ensuite la fonction collision qui donne les vraies nouvelles valeurs de vitesse et position de</span>
+                <span class="c1"># la balle, après de détection de collision. Le paramètre np.zeros((2,2)) permet d&#39;initialiser la</span>
+                <span class="c1"># récursion (cf. la fonction collision)</span>
+
+                <span class="k">if</span> <span class="n">newvalues</span> <span class="o">==</span> <span class="s1">&#39;goal_blue&#39;</span><span class="p">:</span>  <span class="c1"># Si l&#39;équipe bleue marque, on appelle la fonction goal avec comme</span>
+                    <span class="c1"># paramètre l&#39;équipe bleue</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">goal_blue</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">newvalues</span> <span class="o">==</span> <span class="s1">&#39;goal_red&#39;</span><span class="p">:</span>  <span class="c1"># Idem pour rouge</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">goal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">goal_red</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># Si il n&#39;y a pas de but, on met à jour les coordonées et la vitesse de la balle à l&#39;aide des</span>
+                    <span class="c1"># valeurs calculées par la fonction collision</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newvalues</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">col_radius</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span>
+                    <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span>  <span class="c1"># On met à jour le rayon de détection de collision</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">just_caught</span><span class="p">:</span>  <span class="c1"># Si un joueur vient juste d&#39;attrapper la balle, on replace la balle devant celui-ci,</span>
+            <span class="c1"># en direction des cages de l&#39;adversaire</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">team</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_bar</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mf">1.99</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_player</span><span class="p">])</span>
+                <span class="c1"># Le coefficient 1.99 sert à placer la balle juste devant joueur (en dehors de celui-ci)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">team</span> <span class="o">==</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_bar</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mf">1.99</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_player</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">bar</span><span class="o">.</span><span class="n">speed</span><span class="p">])</span>  <span class="c1"># On définit la vitesse de la balle sur la</span>
+            <span class="c1"># vitesse de la barre du joueur la possédant</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">just_caught</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">released</span><span class="p">:</span>  <span class="c1"># Si le joueur relâche la balle, on donne à la balle une impulsion faible vers l&#39;avant du</span>
+            <span class="c1"># joueur. La balle conserve la vitesse acquise par le déplacement du joueur</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">team</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_bar</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mf">1.99</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_player</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.15</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_kick_speed</span>  <span class="c1"># On donne une vitesse à la balle égale à 15% de</span>
+                <span class="c1"># celle de la vitesse donnée lors d&#39;une frappe</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">team</span> <span class="o">==</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_bar</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mf">1.99</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_player</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_kick_speed</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_caught</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">released</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_kick</span><span class="p">:</span>  <span class="c1"># Si l&#39;utilisateur frappe dans la balle, on relâche la balle avec une forte impulsion</span>
+            <span class="c1"># vers  l&#39;avant du joueur. La balle conserve la vitesse acquise par le déplacement du joueur</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">team</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">forward_kick_speed</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">team</span> <span class="o">==</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward_kick_speed</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_caught</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">forward_kick</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Dans le cas où un joueur est en possession de la balle et que l&#39;utilisateur ne la relâche pas d&#39;une</span>
+            <span class="c1"># faço ou d&#39;une autre, la balle suit le joueur. Sa vitesse est de même calquée sur celle du joueur</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">team</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_bar</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mf">1.99</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_player</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">bar</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">team_red_state</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_bar</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span> <span class="o">/</span> <span class="mf">1.99</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">pos_player</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span><span class="o">.</span><span class="n">bar</span><span class="o">.</span><span class="n">speed</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">team_blue_state</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Ball.player_catch_detection"><a class="viewcode-back" href="../ball.html#ball.Ball.player_catch_detection">[docs]</a>    <span class="k">def</span> <span class="nf">player_catch_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">team</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Cette méthode est appelée au moment où l&#39;utlisateur essaye d&#39;attraper la balle à l&#39;aide de Shift ou Tab.</span>
+<span class="sd">        Elle valide ou non la tentative de récupération de balle. Si il y a validation, l&#39;état des variables just_caught</span>
+<span class="sd">        , is_caught et possessing_player est mis à jour &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">team</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">:</span>  <span class="c1"># On définit la liste des barres à vérifier selon la couleur de l&#39;utilisateur tentant</span>
+            <span class="c1"># d&#39;attrapper la balle</span>
+            <span class="n">bars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">team_red_bars</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">team_blue_bars</span>
+
+        <span class="k">for</span> <span class="n">bar</span> <span class="ow">in</span> <span class="n">bars</span><span class="p">:</span>  <span class="c1"># On parcourt les quatres barres de l&#39;équipe</span>
+            <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>  <span class="c1"># Pour chaque joueur d&#39;une barre, on vérifie si la balle se situe à une distance du</span>
+                <span class="c1"># joueur inférieure à la largeur du joueur multipliée par un coefficient catch_radius. Plus ce</span>
+                <span class="c1"># coefficient est élevé, plus il est facile d&#39;attrapper la balle</span>
+                <span class="k">if</span> <span class="n">distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">pos_bar</span><span class="p">,</span> <span class="n">player</span><span class="o">.</span><span class="n">pos_player</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">catch_radius</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_length</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">is_caught</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">is_caught</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">just_caught</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">possessing_player</span> <span class="o">=</span> <span class="n">player</span></div>
+
+<div class="viewcode-block" id="Ball.goal"><a class="viewcode-back" href="../ball.html#ball.Ball.goal">[docs]</a>    <span class="k">def</span> <span class="nf">goal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">goal</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Méthode appelée en cas de but modifiant quelques variables d&#39;état et appelant reset_ball pour remettre la</span>
+<span class="sd">        balle au point central</span>
+
+<span class="sd">        :param goal: une surface correspondant à un des deux buts</span>
+<span class="sd">        :type goal: array numpy&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Si on se trouve sur le but de gauche...</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>  <span class="c1"># Modification du score de droite</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">right_just_scored</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">left_just_scored</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="c1"># On remet la balle au centre</span>
+
+<div class="viewcode-block" id="Ball.reset_ball"><a class="viewcode-back" href="../ball.html#ball.Ball.reset_ball">[docs]</a>    <span class="k">def</span> <span class="nf">reset_ball</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Méthode remettant en jeu la balle en la faisant partir du milieu de terrain dans une direction aléatoire</span>
+<span class="sd">        La valeur aléatoire pour chacune des vitesses est un choix aléatoire entre une valeur alétoire gaussienne</span>
+<span class="sd">        centrée en 1 et une valeur alétoire gaussienne centrée en -1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_speed</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">choice</span><span class="p">((</span><span class="n">gauss</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="n">gauss</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="n">choice</span><span class="p">((</span><span class="n">gauss</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="o">-</span><span class="n">gauss</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mise en jeu&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Ball.end_game"><a class="viewcode-back" href="../ball.html#ball.Ball.end_game">[docs]</a>    <span class="k">def</span> <span class="nf">end_game</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Met fin au jeu&quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fin du jeu&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stat</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Ball.dessinImage"><a class="viewcode-back" href="../ball.html#ball.Ball.dessinImage">[docs]</a>    <span class="k">def</span> <span class="nf">dessinImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qp</span><span class="p">,</span> <span class="n">qpoint</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Méthode dessinant l&#39;image de la balle à l&#39;aide de QImage&quot;&quot;&quot;</span>
+        <span class="n">xcoord</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">length</span> <span class="o">*</span> <span class="n">length</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span>  <span class="c1"># Calcul de l&#39;abcisse de l&#39;objet sur la</span>
+        <span class="c1"># fenêtre. On multiplie la coordonée par le rapport entre la longeur du terrain et la largeur du widget de</span>
+        <span class="c1"># l&#39;IHM. On translate ensuite le résultat pour que les deux soient bien alignés.</span>
+        <span class="n">ycoord</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">width</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>  <span class="c1"># Idem pour l&#39;ordonnée</span>
+        <span class="n">qpoint</span><span class="o">.</span><span class="n">setX</span><span class="p">(</span><span class="n">xcoord</span><span class="p">)</span>
+        <span class="n">qpoint</span><span class="o">.</span><span class="n">setY</span><span class="p">(</span><span class="n">ycoord</span><span class="p">)</span>
+        <span class="n">qp</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="n">qpoint</span><span class="p">,</span> <span class="n">Ball</span><span class="o">.</span><span class="n">image</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Ball.draw"><a class="viewcode-back" href="../ball.html#ball.Ball.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qp</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Méthode faisant appel à l&#39;ensemble des méthodes dessinImage définies dans chacune des instances de Player,</span>
+<span class="sd">        Bar, Ball et Terrain pour dessiner leurs images respectives.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">dessinImage</span><span class="p">(</span><span class="n">qp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qpoint</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dessinImage</span><span class="p">(</span><span class="n">qp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qpoint</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">terrain</span><span class="o">.</span><span class="n">bars</span><span class="p">:</span>
+            <span class="n">bar</span><span class="o">.</span><span class="n">dessinImage</span><span class="p">(</span><span class="n">qp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qpoint</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+                <span class="n">player</span><span class="o">.</span><span class="n">dessinImage</span><span class="p">(</span><span class="n">qp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qpoint</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Code du module</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Inès BENITO &amp; Sacha HIRSCH.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

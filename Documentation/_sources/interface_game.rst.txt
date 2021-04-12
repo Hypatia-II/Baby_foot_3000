@@ -1,0 +1,7 @@
+interface\_game module
+======================
+
+.. automodule:: interface_game
+    :members:
+    :undoc-members:
+    :show-inheritance:

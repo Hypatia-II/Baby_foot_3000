@@ -1,0 +1,19 @@
+scripts
+=======
+
+.. toctree::
+   :maxdepth: 4
+
+   baby_foot_3000
+   ball
+   bar
+   game_stats
+   images_rc
+   interface_baby_credits
+   interface_baby_help
+   interface_baby_settings
+   interface_baby_welcome
+   interface_game
+   physics_engine
+   player
+   terrain

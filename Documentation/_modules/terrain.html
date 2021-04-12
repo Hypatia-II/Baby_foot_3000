@@ -1,0 +1,190 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>terrain &#8212; documentation Baby-Foot 3000 1.0.0</title>
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Code du module</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Code source de terrain</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Auteur : Inès BENITO&quot;&quot;&quot;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Inès BENITO&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">bar</span> <span class="k">import</span> <span class="n">Bar</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="k">import</span> <span class="n">QtGui</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="Terrain"><a class="viewcode-back" href="../terrain.html#terrain.Terrain">[docs]</a><span class="k">class</span> <span class="nc">Terrain</span><span class="p">:</span> <span class="c1">#Auteur : Inès BENITO</span>
+    <span class="sd">&quot;&quot;&quot;Classe définissant un objet ) partir duquel il est possible d&#39;accéder l&#39;ensemble des surfaces. Il contient les</span>
+<span class="sd">    du terrain, les lignes de buts mais aussi une fonction surfaces qui va parcourir l&#39;ensemble des barres et renvoyer</span>
+<span class="sd">    les surfaces des joueurs contenus dans celles-ci.&quot;&quot;&quot;</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QImage</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;Assets/Images/terrain.png&quot;</span><span class="p">))</span>
+    <span class="c1"># Définition de l&#39;image associé au terrain</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;parameters.cfg&quot;</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>  <span class="c1"># On ouvre le</span>
+        <span class="c1"># fichier parameters contenant les paramètres de jeu (modifié en amont pour moduler la difficulté)</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># Longueur du terrain (m)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># Largeur du terrain (m)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_up_limit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_down_limit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span>
+
+        <span class="n">e</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">12</span><span class="p">)</span>  <span class="c1"># Definition d&#39;un epsilon pour ne pas créer des parois parfaitement verticales</span>
+
+        <span class="c1"># Création des huit barres du terrain</span>
+
+        <span class="n">b1</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+        <span class="n">b2</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+        <span class="n">b3</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+        <span class="n">b4</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+        <span class="n">b5</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+        <span class="n">b6</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+        <span class="n">b7</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+        <span class="n">b8</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bars</span> <span class="o">=</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b3</span><span class="p">,</span> <span class="n">b4</span><span class="p">,</span> <span class="n">b5</span><span class="p">,</span> <span class="n">b6</span><span class="p">,</span> <span class="n">b7</span><span class="p">,</span> <span class="n">b8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">team_blue_bars</span> <span class="o">=</span> <span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="n">b2</span><span class="p">,</span> <span class="n">b4</span><span class="p">,</span> <span class="n">b6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">team_red_bars</span> <span class="o">=</span> <span class="p">(</span><span class="n">b3</span><span class="p">,</span> <span class="n">b5</span><span class="p">,</span> <span class="n">b7</span><span class="p">,</span> <span class="n">b8</span><span class="p">)</span>
+
+        <span class="c1"># Définition des buts</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_blue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_down_limit</span><span class="p">],</span>
+                                   <span class="p">[</span><span class="mi">0</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_up_limit</span><span class="p">],</span>
+                                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">goal_red</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_down_limit</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_up_limit</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+        <span class="c1"># Définition des limites du terrain</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">e</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_down</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">e</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_right_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">],</span>
+                                        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_up_limit</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_right_down</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_down_limit</span><span class="p">],</span>
+                                          <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="n">e</span><span class="p">,</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">e</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_left_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_up_limit</span><span class="p">],</span>
+                                       <span class="p">[</span><span class="mi">0</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limit_left_down</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span> <span class="o">-</span> <span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_down_limit</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limits</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limit_down</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_up</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_left_down</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_left_up</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_right_down</span><span class="p">,</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">limit_right_up</span><span class="p">)</span>  <span class="c1"># liste d&#39;arrays</span>
+
+<div class="viewcode-block" id="Terrain.surfaces"><a class="viewcode-back" href="../terrain.html#terrain.Terrain.surfaces">[docs]</a>    <span class="k">def</span> <span class="nf">surfaces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ball</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fonction renvoyant la liste des surfaces pouvant entrer en collision avec la balle. Renvoie les</span>
+<span class="sd">        limites du terrain et les limites des joueurs se situant sur des barres dont l&#39;abscisse est comprise dans un</span>
+<span class="sd">        cercle de rayon ball.col_radius et de centre balle</span>
+
+<span class="sd">        :param ball: La balle</span>
+<span class="sd">        :type ball: Ball</span>
+<span class="sd">        :return: Liste des surfaces atteignables par la balle</span>
+<span class="sd">        :rtype: liste d&#39;arrays numpys&quot;&quot;&quot;</span>
+
+        <span class="n">list_surf</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>  <span class="c1"># ajout des limites du terrain</span>
+
+        <span class="k">for</span> <span class="n">bar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bars</span><span class="p">:</span>  <span class="c1"># ajout des limites des &quot;player&quot; à portée</span>
+            <span class="k">if</span> <span class="n">ball</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ball</span><span class="o">.</span><span class="n">col_radius</span> <span class="o">+</span> <span class="n">bar</span><span class="o">.</span><span class="n">player_width</span> <span class="o">&gt;</span> <span class="n">bar</span><span class="o">.</span><span class="n">pos</span> <span class="o">&gt;</span> <span class="n">ball</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ball</span><span class="o">.</span><span class="n">col_radius</span> \
+                    <span class="o">-</span> <span class="n">bar</span><span class="o">.</span><span class="n">player_width</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">player</span> <span class="ow">in</span> <span class="n">bar</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                        <span class="n">list_surf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">player</span><span class="o">.</span><span class="n">boundaries</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">list_surf</span></div>
+
+<div class="viewcode-block" id="Terrain.goals"><a class="viewcode-back" href="../terrain.html#terrain.Terrain.goals">[docs]</a>    <span class="k">def</span> <span class="nf">goals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fonction retournant les deux buts</span>
+<span class="sd">        :return: Liste d&#39;arrays numpy&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_blue</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_red</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Terrain.dessinImage"><a class="viewcode-back" href="../terrain.html#terrain.Terrain.dessinImage">[docs]</a>    <span class="k">def</span> <span class="nf">dessinImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qp</span><span class="p">,</span> <span class="n">qpoint</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Méthode dessinant l&#39;image du terrain à l&#39;aide de QImage&quot;&quot;&quot;</span>
+        <span class="n">qpoint</span><span class="o">.</span><span class="n">setX</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">13</span><span class="p">)</span>  <span class="c1"># Recalage de l&#39;image du terrain (dimension : pixel)</span>
+        <span class="n">qpoint</span><span class="o">.</span><span class="n">setY</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">qp</span><span class="o">.</span><span class="n">drawImage</span><span class="p">(</span><span class="n">qpoint</span><span class="p">,</span> <span class="n">Terrain</span><span class="o">.</span><span class="n">image</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Recherche rapide</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Index des modules Python"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">documentation Baby-Foot 3000 1.0.0</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Code du module</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Inès BENITO &amp; Sacha HIRSCH.
+      Créé avec <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

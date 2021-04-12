@@ -1,0 +1,7 @@
+interface\_baby\_welcome module
+===============================
+
+.. automodule:: interface_baby_welcome
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,7 @@
+interface\_baby\_credits module
+===============================
+
+.. automodule:: interface_baby_credits
+    :members:
+    :undoc-members:
+    :show-inheritance:

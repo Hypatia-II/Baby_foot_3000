@@ -1,0 +1,7 @@
+baby\_foot\_3000 module
+=======================
+
+.. automodule:: baby_foot_3000
+    :members:
+    :undoc-members:
+    :show-inheritance:

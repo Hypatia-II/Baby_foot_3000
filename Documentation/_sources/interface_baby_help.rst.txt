@@ -1,0 +1,7 @@
+interface\_baby\_help module
+============================
+
+.. automodule:: interface_baby_help
+    :members:
+    :undoc-members:
+    :show-inheritance:

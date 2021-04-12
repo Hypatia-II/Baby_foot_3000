@@ -1,0 +1,7 @@
+interface\_baby\_settings module
+================================
+
+.. automodule:: interface_baby_settings
+    :members:
+    :undoc-members:
+    :show-inheritance:
